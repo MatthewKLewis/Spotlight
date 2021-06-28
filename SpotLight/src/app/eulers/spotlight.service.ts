@@ -3,12 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface DMX {
-  yaw: number;
-  pitch: number;
+  x: number;
+  y: number;
   lum: number;
   color: number;
   strobe: number;
   gobo: number;
+}
+
+export interface CONFIG {
+  x: number;
+  y: number;
+  height: number;
+  cameraOffset: string;
 }
 
 @Injectable({
@@ -20,7 +27,13 @@ export class SpotlightService {
   }
 
   initializeSpotlight(): Observable<any> {
-    return this.http.get('http://localhost:5000/api/init');
+    return this.http.post('http://localhost:5000/api/init', 
+    { //Camera Config Object
+      height: 300,
+      x: 315,
+      y: 495,
+      cameraOffset: '0'
+    });
   }
 
   testSpotlight(dmxObject: any): Observable<any> {

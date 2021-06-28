@@ -24,8 +24,8 @@ var OFFSET_CONFIG = '0'
 export class EulersComponent implements OnInit {
 
   dmxPacket: DMX = {
-    yaw: 0,
-    pitch: 0,
+    x: 0,
+    y: 0,
     lum: 50,
     color: COLOR_YELLOW,
     strobe: 0,
@@ -43,60 +43,13 @@ export class EulersComponent implements OnInit {
   canvasClick(evt: any) {
     var newX = (evt.pageX - evt.originalTarget.offsetLeft)
     var newY = (evt.pageY - evt.originalTarget.offsetTop)
-    //console.log('Distance from Camera:')
-    //console.log('X: ' + newX + ' Y: ' + newY)
     console.log('ΔX: ' + (this.cameraX - newX) + ' ΔY: ' + (this.cameraY - newY))
+    this.dmxPacket.x = newX;
+    this.dmxPacket.y = newY;
 
     //ASSIGN YAW AND PITCH
-    if (newY <= this.cameraY && newX > this.cameraX) {
-      console.log('top right of screen')
-      this.dmxPacket.yaw = Math.floor(this.calculateYawAngle(newX, newY) / YAW_COEFF)
-      this.dmxPacket.pitch = 128 - Math.floor(this.calculatePitchAngle(newX, newY, this.cameraHeight) / PITCH_COEFF)
-    } else if (newY > this.cameraY && newX > this.cameraX) {
-      console.log('bot right of screen')
-      this.dmxPacket.yaw = 43 + (43 - (Math.floor(this.calculateYawAngle(newX, newY) / YAW_COEFF)))
-      this.dmxPacket.pitch = 128 - Math.floor(this.calculatePitchAngle(newX, newY, this.cameraHeight) / PITCH_COEFF)
-    } else if (newY <= this.cameraY && newX <= this.cameraX) {
-      console.log('top left of screen')
-      this.dmxPacket.yaw = 43 + (43 - (Math.floor(this.calculateYawAngle(newX, newY) / YAW_COEFF)))
-      this.dmxPacket.pitch = 128 + Math.floor(this.calculatePitchAngle(newX, newY, this.cameraHeight) / PITCH_COEFF)
-    } else if (newY > this.cameraY && newX <= this.cameraX) {
-      console.log('bot left of screen')
-      this.dmxPacket.yaw = Math.floor(this.calculateYawAngle(newX, newY) / YAW_COEFF)
-      this.dmxPacket.pitch = 128 + Math.floor(this.calculatePitchAngle(newX, newY, this.cameraHeight) / PITCH_COEFF) //WRONG
-    } //GIMBAL UNLOCKING PRODUCES WEIRD MOVEMENT IN CROSSING Y AXIS!!
-
-    // // VARIABLE ELIMINATION
-    //this.dmxPacket.yaw = 128;
-    //this.dmxPacket.pitch = 0;
-
-    // 90 DEGREE OFFSET CALIBRATION
-    if (OFFSET_CONFIG == '90') {
-      this.dmxPacket.yaw += 42
-    } else if (OFFSET_CONFIG == '180') {
-      this.dmxPacket.yaw += 84
-    } else if (OFFSET_CONFIG == '270') {
-      this.dmxPacket.yaw -= 42
-    }
 
     this.moveSpotlight()
-  }
-
-  calculateYawAngle(x: number, y: number) {
-    var opposite = Math.abs(this.cameraX - x);
-    var adjacent = Math.abs(this.cameraY - y);
-    var arcTan = (Math.atan(opposite / adjacent) * (180 / Math.PI));
-    //console.log("Yaw Angle: " + arcTan)
-    return arcTan
-  }
-
-  calculatePitchAngle(x: number, y: number, z: number) {
-    var opposite = Math.abs(this.cameraX - x);
-    var adjacent = Math.abs(this.cameraY - y);
-    var hypotenuse = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2))
-    var arcTan = (Math.atan(hypotenuse / z) * (180 / Math.PI));
-    console.log("Pitch Angle: " + arcTan)
-    return arcTan
   }
 
   initSpotlight() {
