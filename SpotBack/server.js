@@ -26,7 +26,6 @@ const COLOR_RED = 10;
 const COLOR_WHITE = 0;
 const COLOR_YELLOW = 20;
 
-
 // camera variables
 var cameraHeight = 460
 var cameraOffset = '0'
@@ -77,15 +76,18 @@ app.route('/api/move').post((req, res) => {
     var newY = req.body.y
     var yaw = 0
     var pitch = 0
+    var color = COLOR_WHITE
 
     if (newY <= cameraY && newX > cameraX) {
         //console.log('top right of screen')
         yaw = Math.floor(calculateYawAngle(newX, newY) / YAW_COEFF)
         pitch = 128 - Math.floor(calculatePitchAngle(newX, newY, cameraHeight) / PITCH_COEFF)
+        color = COLOR_BLUE
     } else if (newY > cameraY && newX > cameraX) {
         //console.log('bot right of screen')
         yaw = 43 + (43 - (Math.floor(calculateYawAngle(newX, newY) / YAW_COEFF)))
         pitch = 128 - Math.floor(calculatePitchAngle(newX, newY, cameraHeight) / PITCH_COEFF)
+        color = COLOR_RED
     } else if (newY <= cameraY && newX <= cameraX) {
         //console.log('top left of screen')
         yaw = 43 + (43 - (Math.floor(calculateYawAngle(newX, newY) / YAW_COEFF)))
@@ -110,10 +112,10 @@ app.route('/api/move').post((req, res) => {
         2: 0,
         3: pitch,
         4: 0,
-        5: req.body.color,
+        5: color,
         6: req.body.gobo,
         7: 0,
-        8: req.body.lum,
+        8: 60, //req.body.lum
         9: 0 || req.body.speed
     })
     res.status(200).send({ message: "Ok" })
