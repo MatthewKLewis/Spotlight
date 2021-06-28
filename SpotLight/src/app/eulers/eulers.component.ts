@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DMX, SpotlightService } from './spotlight.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-
-var OFFSET_CONFIG = '0'
 
 const YAW_COEFF = 2.117
 const PITCH_COEFF = .705
-
 const COLOR_BLUE = 30;
 const COLOR_CYAN = 70;
 const COLOR_GREEN = 40;
@@ -19,6 +14,7 @@ const COLOR_YELLOW = 20;
 
 //camera is at 495, 453
 //total image size is 834 x 769
+var OFFSET_CONFIG = '0'
 
 @Component({
   selector: 'app-eulers',
@@ -30,10 +26,10 @@ export class EulersComponent implements OnInit {
   dmxPacket: DMX = {
     yaw: 0,
     pitch: 0,
-    lum: 20,
-    color: 0,
+    lum: 50,
+    color: COLOR_YELLOW,
     strobe: 0,
-    gobo: 0,
+    gobo: 30,
   }
 
   cameraX: number = 315
@@ -50,14 +46,6 @@ export class EulersComponent implements OnInit {
     //console.log('Distance from Camera:')
     //console.log('X: ' + newX + ' Y: ' + newY)
     console.log('ΔX: ' + (this.cameraX - newX) + ' ΔY: ' + (this.cameraY - newY))
-
-    if (OFFSET_CONFIG == '0') {
-      //do nothing
-    } else if (OFFSET_CONFIG == '90') {
-      var temp = newX
-      newX = newY
-      newY = temp
-    }
 
     //ASSIGN YAW AND PITCH
     if (newY <= this.cameraY && newX > this.cameraX) {
@@ -78,9 +66,18 @@ export class EulersComponent implements OnInit {
       this.dmxPacket.pitch = 128 + Math.floor(this.calculatePitchAngle(newX, newY, this.cameraHeight) / PITCH_COEFF) //WRONG
     } //GIMBAL UNLOCKING PRODUCES WEIRD MOVEMENT IN CROSSING Y AXIS!!
 
-    // //FOR CALIBRATING
+    // // VARIABLE ELIMINATION
     //this.dmxPacket.yaw = 128;
     //this.dmxPacket.pitch = 0;
+
+    // 90 DEGREE OFFSET CALIBRATION
+    if (OFFSET_CONFIG == '90') {
+      this.dmxPacket.yaw += 42
+    } else if (OFFSET_CONFIG == '180') {
+      this.dmxPacket.yaw += 84
+    } else if (OFFSET_CONFIG == '270') {
+      this.dmxPacket.yaw -= 42
+    }
 
     this.moveSpotlight()
   }
