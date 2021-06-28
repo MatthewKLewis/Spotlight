@@ -27,13 +27,14 @@ export class SpotlightService {
   }
 
   initializeSpotlight(): Observable<any> {
-    return this.http.post('http://localhost:5000/api/init', 
-    { //Camera Config Object
-      height: 300,
-      x: 315,
-      y: 495,
-      cameraOffset: '0'
-    });
+    return this.http.post('http://localhost:5000/api/init',
+      {
+        //Camera Config Object
+        height: 300,
+        x: 315,
+        y: 495,
+        cameraOffset: '0'
+      });
   }
 
   testSpotlight(dmxObject: any): Observable<any> {

@@ -32,23 +32,14 @@ export class EulersComponent implements OnInit {
     gobo: 30,
   }
 
-  cameraX: number = 315
-  cameraY: number = 495
-  cameraHeight: number = 300 // roughly 30 pixels per foot of height.
-
   constructor(public spotLightService: SpotlightService) { }
 
   ngOnInit(): void {  }
 
   canvasClick(evt: any) {
-    var newX = (evt.pageX - evt.originalTarget.offsetLeft)
-    var newY = (evt.pageY - evt.originalTarget.offsetTop)
-    console.log('ΔX: ' + (this.cameraX - newX) + ' ΔY: ' + (this.cameraY - newY))
-    this.dmxPacket.x = newX;
-    this.dmxPacket.y = newY;
-
-    //ASSIGN YAW AND PITCH
-
+    console.log(evt.pageX - evt.originalTarget.offsetLeft, evt.pageY - evt.originalTarget.offsetTop)
+    this.dmxPacket.x = (evt.pageX - evt.originalTarget.offsetLeft);
+    this.dmxPacket.y = (evt.pageY - evt.originalTarget.offsetTop);
     this.moveSpotlight()
   }
 
