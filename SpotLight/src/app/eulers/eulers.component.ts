@@ -32,6 +32,8 @@ export class EulersComponent implements OnInit {
     gobo: 0,
   }
 
+  currentSpotlightId: number = 0;
+
   constructor(public spotLightService: SpotlightService) { }
 
   ngOnInit(): void {  }
@@ -41,6 +43,10 @@ export class EulersComponent implements OnInit {
     this.dmxPacket.x = (evt.pageX - evt.originalTarget.offsetLeft);
     this.dmxPacket.y = (evt.pageY - evt.originalTarget.offsetTop);
     this.moveSpotlight()
+  }
+
+  changeActiveSpotlight(id:number) {
+    this.currentSpotlightId = id;
   }
 
   initSpotlight(id:number) {
@@ -75,7 +81,7 @@ export class EulersComponent implements OnInit {
   }
 
   moveSpotlight() {
-    this.spotLightService.testSpotlight(this.dmxPacket).subscribe((res) => {
+    this.spotLightService.testSpotlight(this.currentSpotlightId, this.dmxPacket).subscribe((res) => {
       //console.log(res)
     })
   }

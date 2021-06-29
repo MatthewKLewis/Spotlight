@@ -1,5 +1,8 @@
 <div class="wrapper">
     <button class="init-btn" (click)="initSpotlight(0)">INITIALIZE 0</button>
     <button class="init-btn" (click)="initSpotlight(1)">INITIALIZE 1</button>
+    <button class="init-btn" (click)="changeActiveSpotlight(0)">CONTROL 0</button>
+    <button class="init-btn" (click)="changeActiveSpotlight(1)">CONTROL 1</button>
+    <p>{{currentSpotlightId}}</p>
     <img class="image" src="../../assets/airista - Copy.jpg" (click)="canvasClick($event)">
 </div>

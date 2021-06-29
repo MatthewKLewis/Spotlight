@@ -50,8 +50,6 @@ function calculatePitchAngle(x, y, spotId) {
 
 app.route('/api/initialize/:id').post((req, res) => {
     try {
-        console.log(req.params.id + ':')
-        console.log(req.body)
         spotVars[req.params.id] =
         {
             x: req.body.x,

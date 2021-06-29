@@ -28,7 +28,7 @@ export class SpotlightService {
     return this.http.post(`http://localhost:5000/api/initialize/${id}`, camCon);
   }
 
-  testSpotlight(dmxObject: any): Observable<any> {
-    return this.http.post('http://localhost:5000/api/move/1', dmxObject);
+  testSpotlight(id: number, dmxObject: any): Observable<any> {
+    return this.http.post(`http://localhost:5000/api/move/${id}`, dmxObject);
   }
 }
