@@ -15,29 +15,20 @@ export interface CONFIG {
   x: number;
   y: number;
   height: number;
-  cameraOffset: string;
+  spotlightOffset: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpotlightService {
-  constructor(private http: HttpClient) {
-    this.initializeSpotlight()
-  }
+  constructor(private http: HttpClient) { }
 
-  initializeSpotlight(): Observable<any> {
-    return this.http.post('http://localhost:5000/api/init',
-      {
-        //Camera Config Object
-        height: 300,
-        x: 315,
-        y: 495,
-        cameraOffset: '0'
-      });
+  initializeSpotlight(id:number, camCon: CONFIG): Observable<any> {
+    return this.http.post(`http://localhost:5000/api/initialize/${id}`, camCon);
   }
 
   testSpotlight(dmxObject: any): Observable<any> {
-    return this.http.post('http://localhost:5000/api/move', dmxObject);
+    return this.http.post('http://localhost:5000/api/move/1', dmxObject);
   }
 }

@@ -26,10 +26,10 @@ export class EulersComponent implements OnInit {
   dmxPacket: DMX = {
     x: 0,
     y: 0,
-    lum: 50,
-    color: COLOR_YELLOW,
+    lum: 40,
+    color: 0,
     strobe: 0,
-    gobo: 30,
+    gobo: 0,
   }
 
   constructor(public spotLightService: SpotlightService) { }
@@ -43,12 +43,35 @@ export class EulersComponent implements OnInit {
     this.moveSpotlight()
   }
 
-  initSpotlight() {
-    this.spotLightService.initializeSpotlight().subscribe((res) => {
-      //do nothing
-    }, (err) => {
-      console.log(err)
-    })
+  initSpotlight(id:number) {
+    if (id == 0) {
+      this.spotLightService.initializeSpotlight(id, 
+        {
+          spotlightOffset: '0',
+          height: 300,
+          x: 315,
+          y: 495
+        }
+        ).subscribe((res) => {
+        console.log(res)
+      }, (err) => {
+        console.log(err)
+      })
+    } 
+    else if (id == 1) {
+      this.spotLightService.initializeSpotlight(id, 
+        {
+          spotlightOffset: '0',
+          height: 300,
+          x: 315,
+          y: 215
+        }
+        ).subscribe((res) => {
+        console.log(res)
+      }, (err) => {
+        console.log(err)
+      })
+    }
   }
 
   moveSpotlight() {
