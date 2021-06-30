@@ -14,7 +14,6 @@ const COLOR_YELLOW = 20;
 
 //camera is at 495, 453
 //total image size is 834 x 769
-var OFFSET_CONFIG = '0'
 
 @Component({
   selector: 'app-eulers',
