@@ -55,8 +55,8 @@ export class EulersComponent implements OnInit {
         {
           spotlightOffset: '0',
           height: 300,
-          x: 315,
-          y: 495
+          x: 200,
+          y: 50
         }
         ).subscribe((res) => {
         console.log(res)
@@ -69,8 +69,8 @@ export class EulersComponent implements OnInit {
         {
           spotlightOffset: '0',
           height: 300,
-          x: 315,
-          y: 215
+          x: 200,
+          y: 550
         }
         ).subscribe((res) => {
         console.log(res)

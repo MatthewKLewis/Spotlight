@@ -70,6 +70,7 @@ app.route('/api/move/:id').post((req, res) => {
         //inputs
         var targetX = req.body.x
         var targetY = req.body.y
+        //var targetZ = req.body.z
 
         //temp vars
         var yaw = 0
@@ -80,12 +81,12 @@ app.route('/api/move/:id').post((req, res) => {
             //console.log('top right of screen')
             yaw = Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)
             pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-            color = COLOR_BLUE
+            //color = COLOR_BLUE
         } else if (targetY > spotVars[req.params.id].y && targetX > spotVars[req.params.id].x) {
             //console.log('bot right of screen')
             yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
             pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-            color = COLOR_RED
+            //color = COLOR_RED
         } else if (targetY <= spotVars[req.params.id].y && targetX <= spotVars[req.params.id].x) {
             //console.log('top left of screen')
             yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
