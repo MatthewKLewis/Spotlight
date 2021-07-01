@@ -2,10 +2,23 @@
 const DMXDevice = require('enttec-open-dmx-usb').EnttecOpenDMXUSBDevice
 const express = require('express');
 const cors = require('cors');
+var mqtt = require('mqtt');
 
 //set up express app
 const app = express();
 const port = process.env.PORT || 5000
+
+//set up mqtt subscriber
+const MQTT_URI = 'https://test.mosquitto.org:1883'
+const testTopic = "test";
+const topicFormat = "silabs/aoa/angle/"
+var topics = []
+const options={
+    clientId:"mqttjs01",
+    username:"steve",
+    password:"password",
+    clean:true};
+var mqttClient = mqtt.connect(MQTT_URI, options)
 
 //assign middleware
 app.use(cors());
@@ -25,10 +38,8 @@ const COLOR_RED = 10
 const COLOR_WHITE = 0
 const COLOR_YELLOW = 20
 
-//DMX devices
+//DMX devices and spotlight config objects
 var devices = []
-
-//Spotlight variables
 var spotVars = []
 
 function calculateYawAngle(x, y, spotId) {
@@ -38,7 +49,6 @@ function calculateYawAngle(x, y, spotId) {
     //console.log("Yaw Angle: " + arcTan)
     return arcTan
 }
-
 function calculatePitchAngle(x, y, spotId) {
     var opposite = Math.abs(spotVars[spotId].x - x)
     var adjacent = Math.abs(spotVars[spotId].y - y)
@@ -48,6 +58,21 @@ function calculatePitchAngle(x, y, spotId) {
     return arcTan
 }
 
+//// FIND SPOTLIGHTS
+try {
+    DMXDevice.listDevices().then((promise) => {
+        promise.forEach((tag) => {
+            console.log('Tag found at ' + tag)
+            devices.push(new DMXDevice(tag))
+        })
+    }).catch((err) => {
+        console.log(err)
+    })
+} catch {
+    console.log('Device Discovery Failed.')
+}
+
+//// HTTP
 app.route('/api/initialize/:id').post((req, res) => {
     try {
         spotVars[req.params.id] =
@@ -62,7 +87,15 @@ app.route('/api/initialize/:id').post((req, res) => {
         res.status(500).send({ message: "Initialization Failed." })
     }
 });
-
+app.route('/api/subscribe').post((req, res) => {
+    try {
+        console.log(req.body)
+        topics.push(topicFormat + req.body.locatorId + '/' + req.body.tagId)
+        mqttClient.subscribe(topics[topics.length - 1], {qos:1})
+    } catch {
+        res.status(500).send({ message: "Tag addition Failed." })
+    }
+});
 app.route('/api/move/:id').post((req, res) => {
     try {
         console.log('Command for Spotlight #' + req.params.id)
@@ -122,20 +155,25 @@ app.route('/api/move/:id').post((req, res) => {
         res.status(500).send({ message: "Error. Spotlight may not be initialized." })
     }
 });
-
-try {
-    DMXDevice.listDevices().then((promise) => {
-        promise.forEach((tag) => {
-            console.log('Tag found at ' + tag)
-            devices.push(new DMXDevice(tag))
-        })
-    }).catch((err) => {
-        console.log(err)
-    })
-} catch {
-    console.log('Device Discovery Failed.')
-}
-
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 });
+
+/// /MQTT
+mqttClient.on("connect", ()=>{
+    console.log('connected')
+})
+mqttClient.on("error", ()=>{
+    console.log('error')
+})
+mqttClient.subscribe(testTopic, {qos:1});
+
+//  {
+//      "x": 1.2,
+//      "y": 1.5,
+//      "z": 1.7
+//  }
+mqttClient.on('message', (topic, message, packet)=>{
+    console.log("topic is "+ topic);
+    console.log(message);
+})
