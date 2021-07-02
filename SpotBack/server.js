@@ -150,17 +150,26 @@ app.route('/api/move/:id').post((req, res) => {
             7: 0, //strobe
             8: 60, //req.body.lum
             9: 0 || req.body.speed
-        })
+        }, true) //TEST
         res.status(200).send({ message: "Ok" })
     } catch {
         res.status(500).send({ message: "Error. Spotlight may not be initialized." })
+    }
+});
+app.route('/api/stop/:id').post((req, res) => {
+    try {
+        console.log('stopping #' + req.params.id)
+        devices[req.params.id].stopSending()
+        res.status(200).send({ message: "Ok" })
+    } catch {
+        res.status(500).send({ message: "Error." })
     }
 });
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 });
 
-/// /MQTT
+/ /MQTT
 mqttClient.on("connect", ()=>{
     console.log('connected')
 })

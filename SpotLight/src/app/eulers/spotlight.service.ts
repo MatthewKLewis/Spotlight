@@ -31,4 +31,10 @@ export class SpotlightService {
   testSpotlight(id: number, dmxObject: any): Observable<any> {
     return this.http.post(`http://localhost:5000/api/move/${id}`, dmxObject);
   }
+
+  stopSpotlight(id: number): Observable<any> {
+    return this.http.post(`http://localhost:5000/api/stop/${id}`, {});
+  }
+
+  
 }

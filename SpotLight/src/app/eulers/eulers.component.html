@@ -6,6 +6,10 @@
     <button class="init-btn" [ngClass]="{'highlight': currentSpotlightId == 0}" (click)="changeActiveSpotlight(0)">CONTROL 0</button>
     <button class="init-btn" [ngClass]="{'highlight': currentSpotlightId == 1}" (click)="changeActiveSpotlight(1)">CONTROL 1</button>
     <p class="instructions">Spotlight to Command: <strong>{{currentSpotlightId}}</strong></p>
+    <button class="init-btn"  (click)="stopSpotlight(0)">Send STOP to 0</button>
+    <button class="init-btn"  (click)="stopSpotlight(1)">Send STOP to 1</button>
+    <p class="instructions">Stop commands turn off the spotlight and return it to (0,0)</p>
+    <br />
     <img class="image" src="../../assets/Plan View - Airista Flow.png" (click)="canvasClick($event)">
     <img height="600" src="../../assets/Left - Airista Flow[799].jpg">
     <div class="instructions">

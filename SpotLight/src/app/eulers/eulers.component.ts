@@ -85,4 +85,10 @@ export class EulersComponent implements OnInit {
     })
   }
 
+  stopSpotlight(id:number) {
+    this.spotLightService.stopSpotlight(id).subscribe((res) => {
+      //console.log(res)
+    })
+  }
+
 }
