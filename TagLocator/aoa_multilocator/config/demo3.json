@@ -1,0 +1,44 @@
+{
+  "id": "multilocator-demo",
+  "locators": [
+    {
+      "id": "ble-pd-842E1431C72F",
+      "coordinate": {
+        "x": 0.0,
+        "y": 4.0,
+        "z": 2.6
+      },
+      "orientation": {
+        "x": 180.0,
+        "y": 0.0,
+        "z": -90.0
+      }
+    },
+    {
+      "id": "ble-pd-588E81A54221",
+      "coordinate": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 2.6
+      },
+      "orientation": {
+        "x": 180.0,
+        "y": 0.0,
+        "z": 90.0
+      }
+    },
+    {
+      "id": "ble-pd-588E81A548C1",
+      "coordinate": {
+        "x": 3.4,
+        "y": 0.0,
+        "z": 2.6
+      },
+      "orientation": {
+        "x": 180.0,
+        "y": 0.0,
+        "z": 90.0
+      }
+    }
+  ]
+}

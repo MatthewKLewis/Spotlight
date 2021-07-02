@@ -81,6 +81,7 @@ app.route('/api/initialize/:id').post((req, res) => {
             y: req.body.y,
             height: req.body.height,
             spotlightOffset: req.body.spotlightOffset,
+            assignedTag: req.body.assignedTag
         }
         console.log(spotVars)
     } catch {
@@ -174,6 +175,11 @@ mqttClient.subscribe(testTopic, {qos:1});
 //      "z": 1.7
 //  }
 mqttClient.on('message', (topic, message, packet)=>{
-    console.log("topic is "+ topic);
-    console.log(message);
+    console.log("topic is "+ topic + " Date: " + Date.now());
+    console.log("message is " + message.toString());
+    console.log("* * * *");
+
+    // for each spotlight config in the array, check to see if the topic
+    // mac adress matches the tag specified for the spotlight to follow
+    // if there is a match between MACs, forward the spotID to calculateYaw, calculatePitch, and setChannels
 })
