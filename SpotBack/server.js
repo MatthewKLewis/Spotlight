@@ -9,16 +9,11 @@ const app = express();
 const port = process.env.PORT || 5000
 
 //set up mqtt subscriber
-const MQTT_URI = 'https://test.mosquitto.org:1883'
+const MQTT_URI = 'mqtt://localhost:1883'
 const testTopic = "test";
 const topicFormat = "silabs/aoa/angle/"
 var topics = []
-const options={
-    clientId:"mqttjs01",
-    username:"steve",
-    password:"password",
-    clean:true};
-var mqttClient = mqtt.connect(MQTT_URI, options)
+var mqttClient = mqtt.connect(MQTT_URI)
 
 //assign middleware
 app.use(cors());
@@ -72,112 +67,117 @@ try {
     console.log('Device Discovery Failed.')
 }
 
+console.log('devices:')
+console.log(devices)
+
 //// HTTP
-app.route('/api/initialize/:id').post((req, res) => {
-    try {
-        spotVars[req.params.id] =
-        {
-            x: req.body.x,
-            y: req.body.y,
-            height: req.body.height,
-            spotlightOffset: req.body.spotlightOffset,
-            assignedTag: req.body.assignedTag
-        }
-        console.log(spotVars)
-    } catch {
-        res.status(500).send({ message: "Initialization Failed." })
-    }
-});
-app.route('/api/subscribe').post((req, res) => {
-    try {
-        console.log(req.body)
-        topics.push(topicFormat + req.body.locatorId + '/' + req.body.tagId)
-        mqttClient.subscribe(topics[topics.length - 1], {qos:1})
-    } catch {
-        res.status(500).send({ message: "Tag addition Failed." })
-    }
-});
-app.route('/api/move/:id').post((req, res) => {
-    try {
-        console.log('Command for Spotlight #' + req.params.id)
+// app.route('/api/initialize/:id').post((req, res) => {
+//     try {
+//         spotVars[req.params.id] =
+//         {
+//             x: req.body.x,
+//             y: req.body.y,
+//             height: req.body.height,
+//             spotlightOffset: req.body.spotlightOffset,
+//             assignedTag: req.body.assignedTag
+//         }
+//         console.log(spotVars)
+//     } catch {
+//         res.status(500).send({ message: "Initialization Failed." })
+//     }
+// });
+// app.route('/api/subscribe').post((req, res) => {
+//     try {
+//         console.log(req.body)
+//         topics.push(topicFormat + req.body.locatorId + '/' + req.body.tagId)
+//         mqttClient.subscribe(topics[topics.length - 1], {qos:1})
+//     } catch {
+//         res.status(500).send({ message: "Tag addition Failed." })
+//     }
+// });
+// app.route('/api/move/:id').post((req, res) => {
+//     try {
+//         console.log('Command for Spotlight #' + req.params.id)
 
-        //inputs
-        var targetX = req.body.x
-        var targetY = req.body.y
-        //var targetZ = req.body.z
+//         //inputs
+//         var targetX = req.body.x
+//         var targetY = req.body.y
+//         //var targetZ = req.body.z
 
-        //temp vars
-        var yaw = 0
-        var pitch = 0
-        var color = COLOR_WHITE
+//         //temp vars
+//         var yaw = 0
+//         var pitch = 0
+//         var color = COLOR_WHITE
 
-        if (targetY <= spotVars[req.params.id].y && targetX > spotVars[req.params.id].x) {
-            //console.log('top right of screen')
-            yaw = Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)
-            pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-            //color = COLOR_BLUE
-        } else if (targetY > spotVars[req.params.id].y && targetX > spotVars[req.params.id].x) {
-            //console.log('bot right of screen')
-            yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
-            pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-            //color = COLOR_RED
-        } else if (targetY <= spotVars[req.params.id].y && targetX <= spotVars[req.params.id].x) {
-            //console.log('top left of screen')
-            yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
-            pitch = 128 + Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-        } else if (targetY > spotVars[req.params.id].y && targetX <= spotVars[req.params.id].x) {
-            //console.log('bot left of screen')
-            yaw = Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)
-            pitch = 128 + Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
-        }
+//         if (targetY <= spotVars[req.params.id].y && targetX > spotVars[req.params.id].x) {
+//             //console.log('top right of screen')
+//             yaw = Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)
+//             pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
+//             //color = COLOR_BLUE
+//         } else if (targetY > spotVars[req.params.id].y && targetX > spotVars[req.params.id].x) {
+//             //console.log('bot right of screen')
+//             yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
+//             pitch = 128 - Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
+//             //color = COLOR_RED
+//         } else if (targetY <= spotVars[req.params.id].y && targetX <= spotVars[req.params.id].x) {
+//             //console.log('top left of screen')
+//             yaw = 43 + (43 - (Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)))
+//             pitch = 128 + Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
+//         } else if (targetY > spotVars[req.params.id].y && targetX <= spotVars[req.params.id].x) {
+//             //console.log('bot left of screen')
+//             yaw = Math.floor(calculateYawAngle(targetX, targetY, req.params.id) / YAW_COEFF)
+//             pitch = 128 + Math.floor(calculatePitchAngle(targetX, targetY, req.params.id) / PITCH_COEFF)
+//         }
 
-        // 90 DEGREE OFFSET CALIBRATION
-        if (spotVars[req.params.id].spotlightOffset == '90') {
-            yaw += 42
-        } else if (spotVars[req.params.id].spotlightOffset == '180') {
-            yaw += 84
-        } else if (spotVars[req.params.id].spotlightOffset == '270') {
-            yaw -= 42
-        }
+//         // 90 DEGREE OFFSET CALIBRATION
+//         if (spotVars[req.params.id].spotlightOffset == '90') {
+//             yaw += 42
+//         } else if (spotVars[req.params.id].spotlightOffset == '180') {
+//             yaw += 84
+//         } else if (spotVars[req.params.id].spotlightOffset == '270') {
+//             yaw -= 42
+//         }
 
-        devices[req.params.id].setChannels({
-            1: yaw,
-            2: 0, //yaw fine tune
-            3: pitch,
-            4: 0, //pitch fine tune
-            5: color,
-            6: req.body.gobo,
-            7: 0, //strobe
-            8: 60, //req.body.lum
-            9: 0 || req.body.speed
-        }, true) //TEST
-        res.status(200).send({ message: "Ok" })
-    } catch {
-        res.status(500).send({ message: "Error. Spotlight may not be initialized." })
-    }
-});
-app.route('/api/stop/:id').post((req, res) => {
-    try {
-        console.log('stopping #' + req.params.id)
-        devices[req.params.id].stopSending()
-        res.status(200).send({ message: "Ok" })
-    } catch {
-        res.status(500).send({ message: "Error." })
-    }
-});
-app.listen(port, () => {
-    console.log(`Listening on port ${port}.`)
-});
+//         devices[req.params.id].setChannels({
+//             1: yaw,
+//             2: 0, //yaw fine tune
+//             3: pitch,
+//             4: 0, //pitch fine tune
+//             5: color,
+//             6: req.body.gobo,
+//             7: 0, //strobe
+//             8: 60, //req.body.lum
+//             9: 0 || req.body.speed
+//         }, true) //TEST
+//         res.status(200).send({ message: "Ok" })
+//     } catch {
+//         res.status(500).send({ message: "Error. Spotlight may not be initialized." })
+//     }
+// });
+// app.route('/api/stop/:id').post((req, res) => {
+//     try {
+//         console.log('stopping #' + req.params.id)
+//         devices[req.params.id].stopSending()
+//         res.status(200).send({ message: "Ok" })
+//     } catch {
+//         res.status(500).send({ message: "Error." })
+//     }
+// });
+// app.listen(port, () => {
+//     console.log(`Listening on port ${port}.`)
+// });
 
-/ /MQTT
+//MQTT
 mqttClient.on("connect", ()=>{
     console.log('connected')
 })
 mqttClient.on("error", ()=>{
     console.log('error')
 })
-mqttClient.subscribe(testTopic, {qos:1});
+mqttClient.subscribe(testTopic, {qos:2});
 
+
+// // Topic: "silabs/aoa/angle/xx_yy_C4:CB:6B:22:22:22"
 //  {
 //      "x": 1.2,
 //      "y": 1.5,
@@ -192,3 +192,8 @@ mqttClient.on('message', (topic, message, packet)=>{
     // mac adress matches the tag specified for the spotlight to follow
     // if there is a match between MACs, forward the spotID to calculateYaw, calculatePitch, and setChannels
 })
+
+// // USER FLOW:
+// 1. ENTER SPOTLIGHT INFO - x, y, z, offset, assignedTagMAC
+// 2. MQTT Connects to the topics, based on the MAC of the TAG given to each Spotlight
+// 3. 
