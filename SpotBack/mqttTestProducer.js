@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
 const MQTT_URI = 'mqtt://localhost:1883'
-const testTopic = "test";
+const testTopic = "silabs/aoa/angle/ble-pd-842E1431C72F";
 const topicFormat = "silabs/aoa/angle/"
 
 var mqttClient = mqtt.connect(MQTT_URI) //no options
