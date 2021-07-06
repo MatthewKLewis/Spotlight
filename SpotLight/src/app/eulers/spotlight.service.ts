@@ -16,6 +16,7 @@ export interface CONFIG {
   y: number;
   height: number;
   spotlightOffset: string;
+  assignedTag: string;
 }
 
 @Injectable({
