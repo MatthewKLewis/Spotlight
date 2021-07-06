@@ -131,7 +131,6 @@ mqttClient.on("error", () => {
 })
 mqttClient.subscribe([testTopic, testTopic2], { qos: 2 });
 mqttClient.on('message', (topic, message, packet) => {
-
     var macAddress = topic.substring(24, 36)
     console.log('Target for MAC: ' + macAddress)
     var spotlightToMove = findSpotlightAssociatedWith(macAddress);
