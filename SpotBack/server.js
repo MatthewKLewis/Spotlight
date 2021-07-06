@@ -11,6 +11,7 @@ const port = process.env.PORT || 5000
 //set up mqtt subscriber
 const MQTT_URI = 'mqtt://localhost:1883'
 const testTopic = "silabs/aoa/angle/ble-pd-842E1431C72F";
+const testTopic2 = "silabs/aoa/angle/ble-pd-842E1431C72A";
 const topicFormat = "silabs/aoa/angle/"
 var mqttClient = mqtt.connect(MQTT_URI)
 
@@ -85,8 +86,6 @@ try {
 } catch {
     console.log('Device Discovery Failed.')
 }
-console.log('devices:')
-console.log(devices)
 
 //// HTTP
 app.route('/api/initialize/:id').post((req, res) => {
@@ -101,8 +100,7 @@ app.route('/api/initialize/:id').post((req, res) => {
                 assignedTag: req.body.assignedTag,
                 device: devices[req.params.id]
             }
-            console.log(spotlights)
-            res.status(200).send({ message: "Ok." })
+            res.status(200).send({ message: req.body.assignedTag + 'assigned' })
         }
         else {
             res.status(500).send({ message: "No device found with index = " + req.params.id + "." })
@@ -131,7 +129,7 @@ mqttClient.on("connect", () => {
 mqttClient.on("error", () => {
     console.log('error')
 })
-mqttClient.subscribe(testTopic, { qos: 2 });
+mqttClient.subscribe([testTopic, testTopic2], { qos: 2 });
 mqttClient.on('message', (topic, message, packet) => {
 
     var macAddress = topic.substring(24, 36)
@@ -186,7 +184,7 @@ mqttClient.on('message', (topic, message, packet) => {
                 5: color,
                 6: 0,
                 7: 0, //strobe
-                8: 60, //req.body.lum
+                8: 20, //req.body.lum
                 9: 0
             }, true)
         } else {
