@@ -36,6 +36,4 @@ export class SpotlightService {
   stopSpotlight(id: number): Observable<any> {
     return this.http.post(`http://localhost:5000/api/stop/${id}`, {});
   }
-
-  
 }

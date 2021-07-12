@@ -1,3 +1,7 @@
+* {
+    font-family: monospace;
+}
+
 button {
     margin: 10px;
 }
@@ -6,6 +10,14 @@ hr {
     border: none;
     height: 1px;
     background-color: green;
+}
+
+img {
+    border: 1px solid black;
+}
+
+canvas {
+    border: 1px solid black;
 }
 
 .wrapper {

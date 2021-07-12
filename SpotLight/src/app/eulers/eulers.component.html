@@ -1,70 +1,7 @@
-<!-- <div class="wrapper">
-    <br />
-    <button class="init-btn" (click)="initSpotlight(0)">INITIALIZE 0</button>
-    <button class="init-btn" (click)="initSpotlight(1)">INITIALIZE 1</button>
-    <br />
-    <button class="init-btn" [ngClass]="{'highlight': currentSpotlightId == 0}" (click)="changeActiveSpotlight(0)">CONTROL 0</button>
-    <button class="init-btn" [ngClass]="{'highlight': currentSpotlightId == 1}" (click)="changeActiveSpotlight(1)">CONTROL 1</button>
-    <p class="instructions">Spotlight to Command: <strong>{{currentSpotlightId}}</strong></p>
-    <button class="init-btn"  (click)="stopSpotlight(0)">Send STOP to 0</button>
-    <button class="init-btn"  (click)="stopSpotlight(1)">Send STOP to 1</button>
-    <p class="instructions">Stop commands turn off the spotlight and return it to (0,0)</p>
-    <br />
-    <img class="image" src="../../assets/Plan View - Airista Flow.png" (click)="canvasClick($event)">
-    <img height="600" src="../../assets/Left - Airista Flow[799].jpg">
-    <div class="instructions">
-        <p>Origin (0,0) at Upper Left Corner of Area.</p>
-        <b>SPOTLIGHTS: (10', 3') & (10', 27') || (3.048m, .9144m) & (3.048m, 8.2296m)</b>
-        <br />
-        <p>LENGTH BETWEEN:</p>
-        <p>24' between spotlights at 16' height.</p>
-        <p>7.3152m between spotlights at 4.8768m height.</p>
-        <br />
-        <b>ANTENNAS: (2', 6.5') + (18', 6.5') + (2', 23.5') + (18', 23.5')</b>
-        <p><b>OR: (.6096m, 1.9812m) + (5.4864m, 1.9812m) + (.6096m, 7.1628m) + (5.4864m, 7.1628m)</b></p>
-    </div>
-</div> -->
-
 <div class="wrapper">
-    <p>Spotlight ZERO</p>
-    <form (ngSubmit)="onAssignSpotlight(0, $event)">
-        <label for="x">X:</label>
-        <input id="x" type="text"><br>
-
-        <label for="y">Y:</label>
-        <input id="y" type="text"><br>
-
-        <label for="z">Z:</label>
-        <input id="z" type="text"><br>
-
-        <label for="90' offset">90 Degree Offset:</label>
-        <input id="90' offset" type="text"><br>
-
-        <label for="mac">MAC Address:</label>
-        <input id="mac" type="text"><br>
-
-        <input id="" type="submit" value="Assign Properties to Spotlight One">
-    </form>
+    <button (click)="chosenSpotlight = 0">Spotlight 0</button>
+    <button (click)="chosenSpotlight = 1">Spotlight 1</button>
+    <span>{{chosenSpotlight}}</span>
     <br>
-    <hr>
-    <br>
-    <p>Spotlight ONE</p>
-    <form (ngSubmit)="onAssignSpotlight(1, $event)">
-        <label for="x">X:</label>
-        <input id="x" type="text"><br>
-
-        <label for="y">Y:</label>
-        <input id="y" type="text"><br>
-
-        <label for="z">Z:</label>
-        <input id="z" type="text"><br>
-
-        <label for="90' offset">90 Degree Offset:</label>
-        <input id="90' offset" type="text"><br>
-
-        <label for="mac">MAC Address:</label>
-        <input id="mac" type="text"><br>
-
-        <input id="" type="submit" value="Assign Properties to Spotlight Two">
-    </form>
+    <canvas id="canvas" (click)="canvasClick($event)"></canvas>
 </div>

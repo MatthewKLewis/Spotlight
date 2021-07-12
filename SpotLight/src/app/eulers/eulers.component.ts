@@ -21,33 +21,46 @@ const COLOR_YELLOW = 20;
   styleUrls: ['./eulers.component.scss']
 })
 export class EulersComponent implements OnInit {
-  dmxPacket: DMX = {
-    x: 0,
-    y: 0,
-    lum: 40,
-    color: 0,
-    strobe: 0,
-    gobo: 0,
-  }
-  currentSpotlightId: number = 0;
+
+  cnv!: HTMLCanvasElement
+  ctx!: CanvasRenderingContext2D
+  image: any = new Image(400,600)
+  chosenSpotlight:number = 0
+
   constructor(public spotLightService: SpotlightService) { }
-  ngOnInit(): void {  }
 
-  onAssignSpotlight(spotId:number, evt:any) {
-    console.log("Spotlight: " + spotId)
-    console.log("X " + evt.target[0].value)
-    console.log("Y " + evt.target[1].value)
-    console.log("Z " + evt.target[2].value)
-    console.log("90 Degree " + evt.target[3].value)
-    console.log("MAC Addr " + evt.target[4].value)
+  ngOnInit(): void {
+    this.cnv = <HTMLCanvasElement>document.querySelector('#canvas')
+    this.ctx = <CanvasRenderingContext2D>this.cnv.getContext('2d')
 
-    this.spotLightService.initializeSpotlight(spotId,
+    this.image.src = '../../assets/new_tradeshow_layout.png'
+    this.image.onload = () => { this.ctx.drawImage(this.image, 0, 0, 400, 600) }
+
+    this.cnv.width = 400
+    this.cnv.height = 600
+  }
+
+  canvasClick(evt: any) {
+    var x = (evt.pageX - evt.originalTarget.offsetLeft);
+    var y = (evt.pageY - evt.originalTarget.offsetTop);
+    
+    this.ctx.drawImage(this.image, 0, 0, 400, 600)
+    
+    this.ctx.beginPath();
+    this.ctx.moveTo(200, 270);
+    this.ctx.lineTo(x, y);
+    this.ctx.stroke();
+
+    var xRectified = (x / evt.target.width) * 5 //ADJUST
+    var yRectified = (y / evt.target.height) * 5 //
+
+    console.log(xRectified, yRectified)
+
+    this.spotLightService.testSpotlight(this.chosenSpotlight,
       {
-        spotlightOffset: evt.target[3].value,
-        height: evt.target[2].value,
-        x: evt.target[0].value,
-        y: evt.target[1].value,
-        assignedTag:  evt.target[4].value
+        x: xRectified,
+        y: yRectified,
+        z: 0,
       }
     ).subscribe((res) => {
       console.log(res)
@@ -55,59 +68,4 @@ export class EulersComponent implements OnInit {
       console.log(err)
     })
   }
-
-  // canvasClick(evt: any) {
-  //   console.log(evt.pageX - evt.originalTarget.offsetLeft, evt.pageY - evt.originalTarget.offsetTop)
-  //   this.dmxPacket.x = (evt.pageX - evt.originalTarget.offsetLeft);
-  //   this.dmxPacket.y = (evt.pageY - evt.originalTarget.offsetTop);
-  //   this.moveSpotlight()
-  // }
-
-  // changeActiveSpotlight(id:number) {
-  //   this.currentSpotlightId = id;
-  // }
-
-  // initSpotlight(id:number) {
-  //   if (id == 0) {
-  //     this.spotLightService.initializeSpotlight(id, 
-  //       {
-  //         spotlightOffset: '0',
-  //         height: 300,
-  //         x: 200,
-  //         y: 50
-  //       }
-  //       ).subscribe((res) => {
-  //       console.log(res)
-  //     }, (err) => {
-  //       console.log(err)
-  //     })
-  //   } 
-  //   else if (id == 1) {
-  //     this.spotLightService.initializeSpotlight(id, 
-  //       {
-  //         spotlightOffset: '0',
-  //         height: 300,
-  //         x: 200,
-  //         y: 550
-  //       }
-  //       ).subscribe((res) => {
-  //       console.log(res)
-  //     }, (err) => {
-  //       console.log(err)
-  //     })
-  //   }
-  // }
-
-  // moveSpotlight() {
-  //   this.spotLightService.testSpotlight(this.currentSpotlightId, this.dmxPacket).subscribe((res) => {
-  //     //console.log(res)
-  //   })
-  // }
-
-  // stopSpotlight(id:number) {
-  //   this.spotLightService.stopSpotlight(id).subscribe((res) => {
-  //     //console.log(res)
-  //   })
-  // }
-
 }
