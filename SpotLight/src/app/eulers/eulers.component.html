@@ -1,7 +1,9 @@
 <div class="wrapper">
     <button (click)="chosenSpotlight = 0">Spotlight 0</button>
     <button (click)="chosenSpotlight = 1">Spotlight 1</button>
-    <span>{{chosenSpotlight}}</span>
+    <b>Spotlight Chosen: {{chosenSpotlight}}</b>
+    <br>
+    <b>Coordinates: {{coordinates[0]}}, {{coordinates[1]}}</b>
     <br>
     <canvas id="canvas" (click)="canvasClick($event)"></canvas>
 </div>
