@@ -1,6 +1,6 @@
 * {
-    font-family: monospace;
-    font-size: 12px;
+    font-family: hybrid;
+    font-size: 24px;
 }
 
 button {
@@ -20,6 +20,7 @@ img {
 
 canvas {
     border: 1px solid black;
+    filter: drop-shadow(4px 4px 4px rgba(160, 0, 210, .5));
 }
 
 .wrapper {

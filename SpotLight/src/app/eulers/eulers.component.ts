@@ -32,7 +32,11 @@ export class EulersComponent implements OnInit {
     var y = (evt.pageY - evt.originalTarget.offsetTop);
     this.ctx.drawImage(this.image, 0, 0, 579, 503)
     this.ctx.beginPath();
-    this.ctx.moveTo(250, 175);
+    if (this.chosenSpotlight == 0) {
+      this.ctx.moveTo(250, 175);
+    } else {
+      this.ctx.moveTo(250, 300);
+    }
     this.ctx.lineTo(x, y);
     this.ctx.stroke();
 
